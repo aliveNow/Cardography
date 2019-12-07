@@ -1,0 +1,33 @@
+package ru.fluffydreams.cardography.core.data
+
+import ru.fluffydreams.cardography.core.exception.Failure
+
+// from https://developer.android.com/jetpack/docs/guide#addendum
+sealed class Resource<out T>(
+    private val _data: T? = null, //FIXME: is there a way to make "override of data" more simple?
+    private val _failure: Failure? = null
+) {
+    open val data: T?
+        get() = _data
+
+    open val failure: Failure?
+        get() = _failure
+
+    class Success<T>(data: T) : Resource<T>(data) {
+        override val data: T
+            get() = super.data!!
+    }
+
+    class Loading<T>(data: T? = null) : Resource<T>(data)
+
+    class Error<T>(failure: Failure, data: T? = null) : Resource<T>(data, failure) {
+        override val failure: Failure
+            get() = super.failure!!
+    }
+}
+
+inline fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> = when(this) {
+    is Resource.Success -> Resource.Success(transform(data))
+    is Resource.Loading -> Resource.Loading()
+    is Resource.Error -> Resource.Error(failure)
+}

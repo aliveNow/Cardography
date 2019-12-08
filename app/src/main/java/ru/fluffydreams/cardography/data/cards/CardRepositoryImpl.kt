@@ -10,4 +10,6 @@ class CardRepositoryImpl (
 
     override fun get(): Resource<List<Card>> = localDataSource.get()
 
+    override fun add(card: Card): Resource<Card> = localDataSource.add(card)
+
 }

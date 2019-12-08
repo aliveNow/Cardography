@@ -13,7 +13,7 @@ data class CardItem(
 @Parcelize
 data class CardSideItem(
     val cardId: Long,
-    val title: String?,
-    val content: String?
+    val title: String? = null,
+    val content: String? = null
 ) : Parcelable
 

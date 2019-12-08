@@ -7,4 +7,6 @@ interface CardLocalDataSource {
 
     fun get(): Resource<List<Card>>
 
+    fun add(card: Card): Resource<Card>
+
 }

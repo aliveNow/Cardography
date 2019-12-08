@@ -25,9 +25,3 @@ sealed class Resource<out T>(
             get() = super.failure!!
     }
 }
-
-inline fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> = when(this) {
-    is Resource.Success -> Resource.Success(transform(data))
-    is Resource.Loading -> Resource.Loading()
-    is Resource.Error -> Resource.Error(failure)
-}

@@ -15,9 +15,11 @@ class MainApplication : Application() {
 
             modules(listOf(
                 viewModelModule,
+                uiMapperModule,
                 useCaseModule,
                 repositoryModule,
                 dataSourceModule,
+                localMapperModule,
                 databaseModule
             ))
         }

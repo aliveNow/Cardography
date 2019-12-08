@@ -11,3 +11,10 @@ data class CardSide(
     val title: String?,
     val content: String?
 )
+
+fun Card.copyWithId(id: Long): Card =
+    copy(
+        id = id,
+        frontSide = frontSide.copy(cardId = id),
+        backSide = backSide.copy(cardId = id)
+    )

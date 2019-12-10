@@ -1,10 +1,8 @@
 package ru.fluffydreams.cardography.ui.cards.list
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import ru.fluffydreams.cardography.core.data.Resource
-import ru.fluffydreams.cardography.core.extensions.setResource
+import androidx.lifecycle.*
+import ru.fluffydreams.cardography.core.data.ItemsLiveData
+import ru.fluffydreams.cardography.core.fragment.BaseViewModel
 import ru.fluffydreams.cardography.domain.cards.interactor.GetCardsUseCase
 import ru.fluffydreams.cardography.core.interactor.UseCase.None
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
@@ -13,12 +11,26 @@ import ru.fluffydreams.cardography.ui.cards.CardItem
 
 class CardsViewModel(
     private val getCardsUseCase: GetCardsUseCase,
-    private val mapper: EntityMapper<Card, CardItem>
-) : ViewModel() {
+    mapper: EntityMapper<Card, CardItem>
+) : BaseViewModel() {
 
-    val cards = MutableLiveData<Resource<List<CardItem>>>()
+    init {
+        get() //fixme
+    }
+
+    val cards: LiveData<List<CardItem>>
+        get() = _cards
+
+    private val _cards: ItemsLiveData<Card, CardItem> = ItemsLiveData(mapper)
 
     fun get() {
-        getCardsUseCase(viewModelScope, None) {cards.setResource(mapper.mapList(it))}
+        beforeUseCase()
+        getCardsUseCase(viewModelScope, None) {
+            _cards.source = it.data
+            afterUseCase(it)
+        }
     }
+
 }
+
+

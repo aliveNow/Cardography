@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_list_card.view.*
 import ru.fluffydreams.cardography.R
-import ru.fluffydreams.cardography.core.extensions.inflate
+import ru.fluffydreams.cardography.core.ui.inflate
 import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.cards.CardSideItem
 

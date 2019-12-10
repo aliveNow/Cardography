@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/cardsFragment">
+
+    <fragment
+        android:id="@+id/cardsFragment"
+        android:name="ru.fluffydreams.cardography.ui.cards.list.CardsFragment"
+        android:label="CardsFragment"
+        tools:layout="@layout/fragment_cards">
+        <action
+            android:id="@+id/action_from_cards_to_add_card"
+            app:destination="@id/addCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCardFragment"
+        android:name="ru.fluffydreams.cardography.ui.cards.edit.AddCardFragment"
+        android:label="AddCardFragment"
+        tools:layout="@layout/fragment_add_card"/>
+</navigation>

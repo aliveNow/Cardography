@@ -1,4 +1,4 @@
-package ru.fluffydreams.cardography.core.extensions
+package ru.fluffydreams.cardography.core.ui
 
 import android.view.LayoutInflater
 import android.view.View

@@ -3,5 +3,7 @@
     <string name="error">Error</string>
     <string name="retry">Retry</string>
 
+    <string name="hint_front_title">Front title</string>
+    <string name="hint_back_title">Back title</string>
     <string name="button_save">Save</string>
 </resources>

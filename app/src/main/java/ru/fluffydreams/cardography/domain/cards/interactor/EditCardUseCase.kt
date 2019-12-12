@@ -5,7 +5,7 @@ import ru.fluffydreams.cardography.core.interactor.UseCase
 import ru.fluffydreams.cardography.domain.cards.Card
 import ru.fluffydreams.cardography.domain.cards.CardRepository
 
-class AddCardUseCase (
+class EditCardUseCase (
     private val cardRepository: CardRepository
 ): UseCase<Card, Card>() {
 

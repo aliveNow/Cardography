@@ -11,12 +11,12 @@
         android:label="CardsFragment"
         tools:layout="@layout/fragment_cards">
         <action
-            android:id="@+id/action_from_cards_to_add_card"
-            app:destination="@id/addCardFragment" />
+            android:id="@+id/action_from_cards_to_edit_card"
+            app:destination="@id/editCardFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addCardFragment"
-        android:name="ru.fluffydreams.cardography.ui.cards.edit.AddCardFragment"
-        android:label="AddCardFragment"
-        tools:layout="@layout/fragment_add_card"/>
+        android:id="@+id/editCardFragment"
+        android:name="ru.fluffydreams.cardography.ui.cards.edit.EditCardFragment"
+        android:label="EditCardFragment"
+        tools:layout="@layout/fragment_edit_card"/>
 </navigation>

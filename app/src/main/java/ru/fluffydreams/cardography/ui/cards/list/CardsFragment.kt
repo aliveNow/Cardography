@@ -26,7 +26,7 @@ class CardsFragment : BaseFragment() {
         viewModel.cards.observe(this, Observer(::updateCards))
         viewModel.operationState.observe(this, Observer(::updateOperationState))
         fab.setOnClickListener {
-            navigateTo(CardsFragmentDirections.actionFromCardsToAddCard())
+            navigateTo(CardsFragmentDirections.actionFromCardsToEditCard())
         }
         cardsList.layoutManager = LinearLayoutManager(context)
         cardsList.adapter = adapter

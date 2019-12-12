@@ -2,7 +2,7 @@ package ru.fluffydreams.cardography.ui.cards.edit
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.fragment_add_card.*
+import kotlinx.android.synthetic.main.fragment_edit_card.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.fluffydreams.cardography.R
 import ru.fluffydreams.cardography.core.fragment.BaseFragment
@@ -10,12 +10,12 @@ import ru.fluffydreams.cardography.core.fragment.OperationState
 import ru.fluffydreams.cardography.core.ui.morphDone
 import ru.fluffydreams.cardography.core.ui.startIndeterminateProgress
 
-class AddCardFragment : BaseFragment() {
+class EditCardFragment : BaseFragment() {
 
-    private val viewModel: AddCardViewModel by viewModel()
+    private val viewModel: EditCardViewModel by viewModel()
 
     override val layoutId: Int
-        get() = R.layout.fragment_add_card
+        get() = R.layout.fragment_edit_card
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

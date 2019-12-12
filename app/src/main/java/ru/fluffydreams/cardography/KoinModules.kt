@@ -12,15 +12,15 @@ import ru.fluffydreams.cardography.datasource.local.AppDatabase
 import ru.fluffydreams.cardography.datasource.local.cards.CardLocalDataSourceImpl
 import ru.fluffydreams.cardography.datasource.local.cards.LocalCardMapper
 import ru.fluffydreams.cardography.domain.cards.CardRepository
-import ru.fluffydreams.cardography.domain.cards.interactor.AddCardUseCase
+import ru.fluffydreams.cardography.domain.cards.interactor.EditCardUseCase
 import ru.fluffydreams.cardography.domain.cards.interactor.GetCardsUseCase
 import ru.fluffydreams.cardography.ui.cards.UICardMapper
-import ru.fluffydreams.cardography.ui.cards.edit.AddCardViewModel
+import ru.fluffydreams.cardography.ui.cards.edit.EditCardViewModel
 import ru.fluffydreams.cardography.ui.cards.list.CardsViewModel
 
 val viewModelModule: Module = module {
     viewModel { CardsViewModel(getCardsUseCase = get(), mapper = get(named(UI_CARD_MAPPER))) }
-    viewModel { AddCardViewModel(addCardUseCase = get(), mapper = get(named(UI_CARD_MAPPER))) }
+    viewModel { EditCardViewModel(editCardUseCase = get(), mapper = get(named(UI_CARD_MAPPER))) }
 }
 
 val uiMapperModule: Module = module {
@@ -29,7 +29,7 @@ val uiMapperModule: Module = module {
 
 val useCaseModule: Module = module {
     factory { GetCardsUseCase(cardRepository = get()) }
-    factory { AddCardUseCase(cardRepository = get()) }
+    factory { EditCardUseCase(cardRepository = get()) }
 }
 
 val repositoryModule: Module = module {

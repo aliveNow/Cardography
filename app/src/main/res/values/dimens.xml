@@ -12,4 +12,9 @@
     <dimen name="button_bottom_margin">10dp</dimen>
     <dimen name="button_height">50dp</dimen>
 
+    <dimen name="button_final_corner_angle">@dimen/button_height</dimen>
+    <dimen name="button_initial_corner_angle">0dp</dimen>
+    <dimen name="button_spinning_bar_padding">0dp</dimen>
+    <dimen name="button_spinning_bar_width">3dp</dimen>
+
 </resources>

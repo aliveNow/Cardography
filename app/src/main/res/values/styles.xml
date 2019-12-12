@@ -7,4 +7,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CircularProgressButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="finalCornerAngle">@dimen/button_final_corner_angle</item>
+        <item name="initialCornerAngle">@dimen/button_initial_corner_angle</item>
+        <item name="spinning_bar_color">@color/button_spinning_bar_color</item>
+        <item name="spinning_bar_padding">@dimen/button_spinning_bar_padding</item>
+        <item name="spinning_bar_width">@dimen/button_spinning_bar_width</item>
+    </style>
+
 </resources>

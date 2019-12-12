@@ -8,5 +8,6 @@
     <color name="white">#FFFFFF</color>
 
     <color name="background_list">@color/white</color>
+    <color name="button_spinning_bar_color">@color/white</color>
 
 </resources>

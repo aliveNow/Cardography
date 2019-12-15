@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
 
-class ItemsLiveData<D, U>(
+class MappedListLiveData<D, U>(
     private val mapper: EntityMapper<D, U>
 ): LiveData<List<U>>(), Observer<List<D>> {
 

@@ -1,7 +1,7 @@
 package ru.fluffydreams.cardography.ui.cards.list
 
 import androidx.lifecycle.*
-import ru.fluffydreams.cardography.core.data.ItemsLiveData
+import ru.fluffydreams.cardography.core.data.MappedListLiveData
 import ru.fluffydreams.cardography.core.fragment.BaseViewModel
 import ru.fluffydreams.cardography.domain.cards.interactor.GetCardsUseCase
 import ru.fluffydreams.cardography.core.interactor.UseCase.None
@@ -14,14 +14,14 @@ class CardsViewModel(
     mapper: EntityMapper<Card, CardItem>
 ) : BaseViewModel() {
 
-    init {
-        get() //fixme
-    }
+    private val _cards = MappedListLiveData(mapper)
 
     val cards: LiveData<List<CardItem>>
         get() = _cards
 
-    private val _cards: ItemsLiveData<Card, CardItem> = ItemsLiveData(mapper)
+    init {
+        get() //fixme
+    }
 
     fun get() {
         beforeUseCase()

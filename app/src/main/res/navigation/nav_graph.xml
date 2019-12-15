@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_from_cards_to_edit_card"
             app:destination="@id/editCardFragment" />
+        <action
+            android:id="@+id/action_from_cards_to_memorize"
+            app:destination="@id/memorizeCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/editCardFragment"
         android:name="ru.fluffydreams.cardography.ui.cards.edit.EditCardFragment"
         android:label="EditCardFragment"
         tools:layout="@layout/fragment_edit_card"/>
+    <fragment
+        android:id="@+id/memorizeCardFragment"
+        android:name="ru.fluffydreams.cardography.ui.memorize.MemorizeCardFragment"
+        android:label="MemorizeCardFragment"
+        tools:layout="@layout/fragment_memorize_card"/>
 </navigation>

@@ -25,3 +25,12 @@ sealed class Resource<out T>(
             get() = super.failure!!
     }
 }
+
+fun <F, T> Resource<F>.map(transform: (F) -> T): Resource<T> {
+    val transformedData = data?.let { transform(it) }
+    return when(this) {
+        is Resource.Success -> Resource.Success(transformedData!!)
+        is Resource.Loading -> Resource.Loading(transformedData)
+        is Resource.Error -> Resource.Error(failure, transformedData)
+    }
+}

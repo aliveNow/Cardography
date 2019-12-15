@@ -1,7 +1,12 @@
 package ru.fluffydreams.cardography.ui.cards.list
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_cards.*
@@ -31,6 +36,15 @@ class CardsFragment : BaseFragment() {
         cardsList.layoutManager = LinearLayoutManager(context)
         cardsList.adapter = adapter
         swipeRefreshLayout.setOnRefreshListener { refresh() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_cards, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return item.onNavDestinationSelected(findNavController())
+                || super.onOptionsItemSelected(item)
     }
 
     private fun updateCards(list: List<CardItem>?) {

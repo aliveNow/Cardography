@@ -2,7 +2,14 @@
     <string name="app_name">Cardography</string>
     <string name="retry">Retry</string>
 
+    <string name="menu_memorize">Memorize</string>
+
     <string name="hint_front_title">Front title</string>
     <string name="hint_back_title">Back title</string>
+
     <string name="button_save">Save</string>
+    <string name="button_show_answer">Show Answer</string>
+    <string name="button_set_aside">Set Aside</string>
+    <string name="button_next">Next</string>
+    <string name="button_done">Done</string>
 </resources>

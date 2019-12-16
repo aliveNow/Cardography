@@ -17,8 +17,8 @@ package ru.fluffydreams.cardography.core.interactor
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.fluffydreams.cardography.core.data.Resource
 
 /**
@@ -31,14 +31,17 @@ import ru.fluffydreams.cardography.core.data.Resource
  */
 abstract class UseCase<out Type, in Params> where Type : Any {
 
+    open fun beforePerform(params: Params) { }
+
     abstract suspend fun perform(params: Params): Resource<Type>
 
     operator fun invoke(scope: CoroutineScope,
                         params: Params,
                         onResult: (Resource<Type>) -> Unit = {}) {
+        beforePerform(params)
         scope.launch {
-            val job = async(Dispatchers.IO) { perform(params) }
-            onResult(job.await())
+            val result = withContext(Dispatchers.IO) { perform(params) }
+            onResult(result)
         }
     }
 

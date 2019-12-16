@@ -10,6 +10,7 @@ import ru.fluffydreams.cardography.core.interactor.UseCase
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
 import ru.fluffydreams.cardography.domain.cards.Card
 import ru.fluffydreams.cardography.domain.memorize.interactor.GetCardsMemorizationUseCase
+import ru.fluffydreams.cardography.domain.memorize.interactor.SaveMemorizationResultUseCase
 import ru.fluffydreams.cardography.domain.memorize.model.BaseMemorization
 import ru.fluffydreams.cardography.domain.memorize.model.Memorization
 import ru.fluffydreams.cardography.ui.cards.CardItem
@@ -17,6 +18,7 @@ import ru.fluffydreams.cardography.ui.memorize.MemorizationState.*
 
 class MemorizeCardViewModel(
     private val getMemorizationUseCase: GetCardsMemorizationUseCase,
+    private val saveMemorizationResultUseCase: SaveMemorizationResultUseCase,
     private val mapper: EntityMapper<Card, CardItem>
 ) : BaseViewModel() {
 
@@ -42,6 +44,12 @@ class MemorizeCardViewModel(
                 _state.value = STARTED
             }
             afterUseCase(it)
+        }
+    }
+
+    private fun save(params: Memorization<Card>) {
+        saveMemorizationResultUseCase(viewModelScope, params) {
+            //fixme show errors
         }
     }
 
@@ -73,12 +81,17 @@ class MemorizeCardViewModel(
 
         override fun showAnswer(): Boolean = base.showAnswer()
 
-        override fun next(): CardItem? = base.next()?.let { transform(it) }
+        override fun next(): CardItem? =
+            base.next()?.let {
+                save(base)
+                transform(it)
+            }
 
         override fun setAside(): Boolean = base.setAside()
 
         override fun done(): Boolean =
             if (base.done()) {
+                save(base)
                 _state.value = DONE
                 true
             } else {

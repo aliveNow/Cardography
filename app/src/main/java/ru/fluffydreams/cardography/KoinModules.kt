@@ -1,6 +1,11 @@
 package ru.fluffydreams.cardography
 
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -14,11 +19,15 @@ import ru.fluffydreams.cardography.datasource.local.AppDatabase
 import ru.fluffydreams.cardography.datasource.local.cards.CardLocalDataSourceImpl
 import ru.fluffydreams.cardography.datasource.local.cards.LocalCardMapper
 import ru.fluffydreams.cardography.datasource.local.memorize.MemorizeCardLocalDataSourceImpl
+import ru.fluffydreams.cardography.datasource.local.memorize.mapper.LocalAttemptMapper
+import ru.fluffydreams.cardography.datasource.local.memorize.mapper.LocalAttemptResultMapper
 import ru.fluffydreams.cardography.domain.cards.CardRepository
 import ru.fluffydreams.cardography.domain.cards.interactor.EditCardUseCase
 import ru.fluffydreams.cardography.domain.cards.interactor.GetCardsUseCase
 import ru.fluffydreams.cardography.domain.memorize.MemorizeCardRepository
 import ru.fluffydreams.cardography.domain.memorize.interactor.GetCardsMemorizationUseCase
+import ru.fluffydreams.cardography.domain.memorize.interactor.SaveMemorizationResultUseCase
+import ru.fluffydreams.cardography.domain.memorize.model.MemorizeAttemptResult
 import ru.fluffydreams.cardography.ui.cards.UICardMapper
 import ru.fluffydreams.cardography.ui.cards.edit.EditCardViewModel
 import ru.fluffydreams.cardography.ui.cards.list.CardsViewModel
@@ -29,6 +38,7 @@ val viewModelModule: Module = module {
     viewModel { EditCardViewModel(editCardUseCase = get(), mapper = get(named(UI_CARD_MAPPER))) }
     viewModel { MemorizeCardViewModel(
         getMemorizationUseCase = get(),
+        saveMemorizationResultUseCase = get(),
         mapper = get(named(UI_CARD_MAPPER))
     ) }
 }
@@ -41,6 +51,7 @@ val useCaseModule: Module = module {
     factory { GetCardsUseCase(cardRepository = get()) }
     factory { EditCardUseCase(cardRepository = get()) }
     factory { GetCardsMemorizationUseCase(memorizeCardRepository = get()) }
+    factory { SaveMemorizationResultUseCase(memorizeCardRepository = get()) }
 }
 
 val repositoryModule: Module = module {
@@ -55,13 +66,17 @@ val dataSourceModule: Module = module {
     ) as CardLocalDataSource }
 
     single { MemorizeCardLocalDataSourceImpl(
+        cardDao = get(),
         memorizeCardDao = get(),
-        mapper = get(named(LOCAL_CARD_MAPPER))
+        cardMapper = get(named(LOCAL_CARD_MAPPER)),
+        attemptMapper = get(named(LOCAL_ATTEMPT_MAPPER))
     ) as MemorizeCardLocalDataSource}
 }
 
 val localMapperModule: Module = module {
     single(named(LOCAL_CARD_MAPPER)) { LocalCardMapper() }
+    single(named(LOCAL_ATTEMPT_MAPPER)) { LocalAttemptMapper() }
+    single(named(LOCAL_ATTEMPT_RESULT_MAPPER)) { LocalAttemptResultMapper() }
 }
 
 val databaseModule = module {
@@ -70,12 +85,26 @@ val databaseModule = module {
         Room.databaseBuilder(
             androidContext().applicationContext,
             AppDatabase::class.java, "cardography_db"
-        ).build()
+        ).addCallback(object : RoomDatabase.Callback() {
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+                populateDB(get(), get(named(LOCAL_ATTEMPT_RESULT_MAPPER)))
+            }
+        }).build()
     }
 
     single { get<AppDatabase>().cardDao() }
     single { get<AppDatabase>().memorizeCardDao() }
 }
 
+fun populateDB(db: AppDatabase, resultMapper: LocalAttemptResultMapper) {
+    GlobalScope.launch(Dispatchers.IO) {
+        val list = resultMapper.map(MemorizeAttemptResult.values().toList())
+        db.memorizeCardDao().saveAttemptResults(list)
+    }
+}
+
 private const val UI_CARD_MAPPER = "UI_CARD_MAPPER"
 private const val LOCAL_CARD_MAPPER = "LOCAL_CARD_MAPPER"
+private const val LOCAL_ATTEMPT_MAPPER = "LOCAL_ATTEMPT_MAPPER"
+private const val LOCAL_ATTEMPT_RESULT_MAPPER = "LOCAL_ATTEMPT_RESULT_MAPPER"

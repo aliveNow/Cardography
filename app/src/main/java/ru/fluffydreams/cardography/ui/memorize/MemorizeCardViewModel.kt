@@ -9,16 +9,14 @@ import ru.fluffydreams.cardography.core.fragment.BaseViewModel
 import ru.fluffydreams.cardography.core.interactor.UseCase
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
 import ru.fluffydreams.cardography.domain.cards.Card
-import ru.fluffydreams.cardography.domain.memorize.interactor.GetCardsMemorizationUseCase
-import ru.fluffydreams.cardography.domain.memorize.interactor.SaveMemorizationResultUseCase
 import ru.fluffydreams.cardography.domain.memorize.model.BaseMemorization
 import ru.fluffydreams.cardography.domain.memorize.model.Memorization
 import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.memorize.MemorizationState.*
 
 class MemorizeCardViewModel(
-    private val getMemorizationUseCase: GetCardsMemorizationUseCase,
-    private val saveMemorizationResultUseCase: SaveMemorizationResultUseCase,
+    private val getMemorizationUseCase: UseCase<Memorization<Card>, UseCase.None>,
+    private val saveMemorizationUseCase: UseCase<Boolean, Memorization<Card>>,
     private val mapper: EntityMapper<Card, CardItem>
 ) : BaseViewModel() {
 
@@ -48,7 +46,7 @@ class MemorizeCardViewModel(
     }
 
     private fun save(params: Memorization<Card>) {
-        saveMemorizationResultUseCase(viewModelScope, params) {
+        saveMemorizationUseCase(viewModelScope, params) {
             //fixme show errors
         }
     }

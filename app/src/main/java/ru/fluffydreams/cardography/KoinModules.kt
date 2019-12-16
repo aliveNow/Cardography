@@ -34,11 +34,17 @@ import ru.fluffydreams.cardography.ui.cards.list.CardsViewModel
 import ru.fluffydreams.cardography.ui.memorize.MemorizeCardViewModel
 
 val viewModelModule: Module = module {
-    viewModel { CardsViewModel(getCardsUseCase = get(), mapper = get(named(UI_CARD_MAPPER))) }
-    viewModel { EditCardViewModel(editCardUseCase = get(), mapper = get(named(UI_CARD_MAPPER))) }
+    viewModel { CardsViewModel(
+        getCardsUseCase = get(named(GET_CARDS_USE_CASE)),
+        mapper = get(named(UI_CARD_MAPPER))
+    ) }
+    viewModel { EditCardViewModel(
+        editCardUseCase = get(named(EDIT_CARD_USE_CASE)),
+        mapper = get(named(UI_CARD_MAPPER))
+    ) }
     viewModel { MemorizeCardViewModel(
-        getMemorizationUseCase = get(),
-        saveMemorizationResultUseCase = get(),
+        getMemorizationUseCase = get(named(GET_CARDS_MEMORIZATION_USE_CASE)),
+        saveMemorizationUseCase = get(named(SAVE_MEMORIZATION_RESULT_USE_CASE)),
         mapper = get(named(UI_CARD_MAPPER))
     ) }
 }
@@ -48,10 +54,14 @@ val uiMapperModule: Module = module {
 }
 
 val useCaseModule: Module = module {
-    factory { GetCardsUseCase(cardRepository = get()) }
-    factory { EditCardUseCase(cardRepository = get()) }
-    factory { GetCardsMemorizationUseCase(memorizeCardRepository = get()) }
-    factory { SaveMemorizationResultUseCase(memorizeCardRepository = get()) }
+    factory(named(GET_CARDS_USE_CASE)) { GetCardsUseCase(cardRepository = get()) }
+    factory(named(EDIT_CARD_USE_CASE)) { EditCardUseCase(cardRepository = get()) }
+    factory(named(GET_CARDS_MEMORIZATION_USE_CASE)) {
+        GetCardsMemorizationUseCase(memorizeCardRepository = get())
+    }
+    factory(named(SAVE_MEMORIZATION_RESULT_USE_CASE)) {
+        SaveMemorizationResultUseCase(memorizeCardRepository = get())
+    }
 }
 
 val repositoryModule: Module = module {
@@ -103,6 +113,11 @@ fun populateDB(db: AppDatabase, resultMapper: LocalAttemptResultMapper) {
         db.memorizeCardDao().saveAttemptResults(list)
     }
 }
+
+private const val EDIT_CARD_USE_CASE = "EDIT_CARD_USE_CASE"
+private const val GET_CARDS_USE_CASE = "GET_CARDS_USE_CASE"
+private const val GET_CARDS_MEMORIZATION_USE_CASE = "GET_CARDS_MEMORIZATION_USE_CASE"
+private const val SAVE_MEMORIZATION_RESULT_USE_CASE = "SAVE_MEMORIZATION_RESULT_USE_CASE"
 
 private const val UI_CARD_MAPPER = "UI_CARD_MAPPER"
 private const val LOCAL_CARD_MAPPER = "LOCAL_CARD_MAPPER"

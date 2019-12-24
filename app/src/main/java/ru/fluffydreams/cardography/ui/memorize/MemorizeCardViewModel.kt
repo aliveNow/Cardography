@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import ru.fluffydreams.cardography.core.data.MappedLiveData
 import ru.fluffydreams.cardography.core.data.NonNullLiveData
 import ru.fluffydreams.cardography.core.data.NonNullMutableLiveData
+import ru.fluffydreams.cardography.core.filter.Filter
 import ru.fluffydreams.cardography.core.fragment.BaseViewModel
 import ru.fluffydreams.cardography.core.interactor.UseCase
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
@@ -15,7 +16,7 @@ import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.memorize.MemorizationState.*
 
 class MemorizeCardViewModel(
-    private val getMemorizationUseCase: UseCase<Memorization<Card>, UseCase.None>,
+    private val getMemorizationUseCase: UseCase<Memorization<Card>, Filter>,
     private val saveMemorizationUseCase: UseCase<Boolean, Memorization<Card>>,
     private val mapper: EntityMapper<Card, CardItem>
 ) : BaseViewModel() {
@@ -36,7 +37,7 @@ class MemorizeCardViewModel(
     private fun get() {
         beforeUseCase()
         _state.value = LOADING
-        getMemorizationUseCase(viewModelScope, UseCase.None) {
+        getMemorizationUseCase(viewModelScope, Filter.None) {
             it.data?.let { list ->
                 _memorization = CardItemMemorization(list, mapper)
                 _state.value = STARTED

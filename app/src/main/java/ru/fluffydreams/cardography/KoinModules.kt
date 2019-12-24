@@ -3,6 +3,7 @@ package ru.fluffydreams.cardography
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -11,6 +12,8 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import ru.fluffydreams.cardography.core.filter.FilterInterpreterBuilder
+import ru.fluffydreams.cardography.core.sql.SQLFilterInterpreter
 import ru.fluffydreams.cardography.data.cards.CardLocalDataSource
 import ru.fluffydreams.cardography.data.cards.CardRepositoryImpl
 import ru.fluffydreams.cardography.data.memorize.MemorizeCardLocalDataSource
@@ -79,7 +82,8 @@ val dataSourceModule: Module = module {
         cardDao = get(),
         memorizeCardDao = get(),
         cardMapper = get(named(LOCAL_CARD_MAPPER)),
-        attemptMapper = get(named(LOCAL_ATTEMPT_MAPPER))
+        attemptMapper = get(named(LOCAL_ATTEMPT_MAPPER)),
+        filterInterpreter = sqlFilterInterpreter
     ) as MemorizeCardLocalDataSource}
 }
 
@@ -113,6 +117,18 @@ fun populateDB(db: AppDatabase, resultMapper: LocalAttemptResultMapper) {
         db.memorizeCardDao().saveAttemptResults(list)
     }
 }
+
+//fixme make all as const?
+val sqlFilterInterpreter =
+    object : FilterInterpreterBuilder<SupportSQLiteQuery>() {
+        override fun getInterpreter() =
+            SQLFilterInterpreter(createFieldMapper(), createRelationMapper())
+    }.apply {
+        setEntity("Card", "cards")
+        setEntity("MemorizeAttempt", "attempts")
+        setField("attempts", "date", "date")
+        setRelation("cards", "attempts", "id", "cardId")
+    }.getInterpreter()
 
 private const val EDIT_CARD_USE_CASE = "EDIT_CARD_USE_CASE"
 private const val GET_CARDS_USE_CASE = "GET_CARDS_USE_CASE"

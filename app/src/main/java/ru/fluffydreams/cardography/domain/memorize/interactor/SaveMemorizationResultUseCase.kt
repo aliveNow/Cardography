@@ -4,35 +4,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.fluffydreams.cardography.core.data.Resource
 import ru.fluffydreams.cardography.core.interactor.UseCase
-import ru.fluffydreams.cardography.domain.cards.Card
-import ru.fluffydreams.cardography.domain.memorize.MemorizeCardRepository
-import ru.fluffydreams.cardography.domain.memorize.model.CardsMemorization
-import ru.fluffydreams.cardography.domain.memorize.model.Memorization
-import ru.fluffydreams.cardography.domain.memorize.model.MemorizeAttempt
+import ru.fluffydreams.cardography.domain.memorize.MemorizeRepository
+import ru.fluffydreams.cardography.domain.memorize.model.MemFact
+import ru.fluffydreams.cardography.domain.memorize.memorization.MemFactMemorization
 import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
 
-class SaveMemorizationResultUseCase (
-    private val memorizeCardRepository: MemorizeCardRepository
-): UseCase<Boolean, Memorization<Card>>() {
+class SaveMemorizationResultUseCase<F : MemFact> (
+    private val memorizeRepository: MemorizeRepository<F>
+): UseCase<Boolean, MemFactMemorization<F>>() {
 
-    private val queriesQueue: Queue<List<MemorizeAttempt>> = ConcurrentLinkedQueue()
+    private val queriesQueue: Queue<List<MemFact>> = LinkedList()
 
-    override fun beforePerform(params: Memorization<Card>) {
+    override fun beforePerform(params: MemFactMemorization<F>) {
         super.beforePerform(params)
-        val query = (params as? CardsMemorization)?.notSavedAttempts ?: emptyList()
-        queriesQueue.offer(query)
+        with(params.changes) {
+            val query = changed()
+            markSaving(query)
+            queriesQueue.offer(query)
+        }
     }
 
     @Synchronized
-    override suspend fun perform(params: Memorization<Card>): Resource<Boolean> {
-        val attempts = queriesQueue.poll()
-        attempts?.let {
-            memorizeCardRepository.save(it)
-            if (params is CardsMemorization) {
-                withContext(Dispatchers.Main) {
-                    params.attemptsWereSaved(it)
-                }
+    override suspend fun perform(params: MemFactMemorization<F>): Resource<Boolean> {
+        val query = queriesQueue.poll()
+        query?.let {
+            memorizeRepository.save(it)
+            withContext(Dispatchers.Main) {
+                params.changes.markSaved(it)
             }
         }
         return Resource.Success(true)

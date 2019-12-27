@@ -1,7 +1,5 @@
 package ru.fluffydreams.cardography.core.filter
 
-import java.lang.IllegalArgumentException
-
 interface RelationMapper {
     operator fun invoke(entity1: String, entity2: String): Pair<String, String>
     operator fun invoke(entities: Pair<String, String>): Pair<String, String>

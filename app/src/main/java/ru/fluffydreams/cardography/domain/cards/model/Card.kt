@@ -1,4 +1,4 @@
-package ru.fluffydreams.cardography.domain.cards
+package ru.fluffydreams.cardography.domain.cards.model
 
 data class Card(
     val id: Long,

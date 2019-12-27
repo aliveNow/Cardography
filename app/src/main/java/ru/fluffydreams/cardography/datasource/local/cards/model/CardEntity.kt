@@ -1,4 +1,4 @@
-package ru.fluffydreams.cardography.datasource.local.cards
+package ru.fluffydreams.cardography.datasource.local.cards.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

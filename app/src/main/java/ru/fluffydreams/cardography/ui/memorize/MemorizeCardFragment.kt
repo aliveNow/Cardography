@@ -7,14 +7,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.fluffydreams.cardography.R
 import ru.fluffydreams.cardography.core.fragment.BaseFragment
 import ru.fluffydreams.cardography.core.ui.setVisible
-import ru.fluffydreams.cardography.domain.memorize.model.Memorization
 import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.memorize.MemorizeCardViewModel.EmptyMemorization
 
 class MemorizeCardFragment : BaseFragment() {
 
     private val viewModel: MemorizeCardViewModel by viewModel()
-    private var memorization: Memorization<CardItem> = viewModel.memorization
+    private var memorization: CardItemMemorization = EmptyMemorization
         set(value) {
             val oldValue = field
             field = value
@@ -41,8 +40,8 @@ class MemorizeCardFragment : BaseFragment() {
         }
     }
 
-    private fun updateMemorization(memorization: Memorization<CardItem>,
-                                   oldValue: Memorization<CardItem>? = null) {
+    private fun updateMemorization(memorization: CardItemMemorization,
+                                   oldValue: CardItemMemorization? = null) {
         if (memorization != oldValue && memorization != EmptyMemorization) {
             oldValue?.currentFact?.removeObservers(this)
             oldValue?.isAnswerVisible?.removeObservers(this)

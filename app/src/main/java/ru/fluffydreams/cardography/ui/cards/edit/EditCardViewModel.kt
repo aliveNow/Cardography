@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import ru.fluffydreams.cardography.core.fragment.BaseViewModel
 import ru.fluffydreams.cardography.core.interactor.UseCase
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
-import ru.fluffydreams.cardography.domain.cards.Card
+import ru.fluffydreams.cardography.domain.cards.model.Card
 import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.cards.CardSideItem
 

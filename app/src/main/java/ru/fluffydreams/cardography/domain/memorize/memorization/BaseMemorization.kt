@@ -1,13 +1,17 @@
-package ru.fluffydreams.cardography.domain.memorize.model
+package ru.fluffydreams.cardography.domain.memorize.memorization
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ru.fluffydreams.cardography.core.data.Identifiable
 import ru.fluffydreams.cardography.core.data.NonNullLiveData
 import ru.fluffydreams.cardography.core.data.NonNullMutableLiveData
+import ru.fluffydreams.cardography.core.data.TrackingChangesCollection
 import java.util.*
 
-open class BaseMemorization<F>(factsList: List<F>) :
-    Memorization<F> {
+open class BaseMemorization<C : Identifiable, F : C>(
+    factsList: List<F>,
+    override val changes: TrackingChangesCollection<C> = TrackingChangesCollection()
+) : Memorization<C, F> {
 
     private val facts: Deque<F> = LinkedList(factsList)
     private val processedFacts: MutableList<F> = mutableListOf()

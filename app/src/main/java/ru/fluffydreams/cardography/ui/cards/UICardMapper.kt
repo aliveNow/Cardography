@@ -1,8 +1,8 @@
 package ru.fluffydreams.cardography.ui.cards
 
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
-import ru.fluffydreams.cardography.domain.cards.Card
-import ru.fluffydreams.cardography.domain.cards.CardSide
+import ru.fluffydreams.cardography.domain.cards.model.Card
+import ru.fluffydreams.cardography.domain.cards.model.CardSide
 
 class UICardMapper : EntityMapper<Card, CardItem>(
     { entity : Card -> entity.mapToUI() },

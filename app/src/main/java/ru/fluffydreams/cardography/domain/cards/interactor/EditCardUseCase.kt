@@ -2,8 +2,8 @@ package ru.fluffydreams.cardography.domain.cards.interactor
 
 import ru.fluffydreams.cardography.core.data.Resource
 import ru.fluffydreams.cardography.core.interactor.UseCase
-import ru.fluffydreams.cardography.domain.cards.Card
 import ru.fluffydreams.cardography.domain.cards.CardRepository
+import ru.fluffydreams.cardography.domain.cards.model.Card
 
 class EditCardUseCase (
     private val cardRepository: CardRepository

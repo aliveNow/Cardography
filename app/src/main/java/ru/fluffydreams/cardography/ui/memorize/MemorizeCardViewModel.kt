@@ -2,32 +2,34 @@ package ru.fluffydreams.cardography.ui.memorize
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import ru.fluffydreams.cardography.core.data.MappedLiveData
-import ru.fluffydreams.cardography.core.data.NonNullLiveData
-import ru.fluffydreams.cardography.core.data.NonNullMutableLiveData
+import ru.fluffydreams.cardography.core.data.*
 import ru.fluffydreams.cardography.core.filter.Filter
 import ru.fluffydreams.cardography.core.fragment.BaseViewModel
 import ru.fluffydreams.cardography.core.interactor.UseCase
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
-import ru.fluffydreams.cardography.domain.cards.Card
-import ru.fluffydreams.cardography.domain.memorize.model.BaseMemorization
-import ru.fluffydreams.cardography.domain.memorize.model.Memorization
+import ru.fluffydreams.cardography.domain.memcard.model.MemCard
+import ru.fluffydreams.cardography.domain.memorize.memorization.BaseMemorization
+import ru.fluffydreams.cardography.domain.memorize.memorization.MemFactMemorization
+import ru.fluffydreams.cardography.domain.memorize.memorization.Memorization
 import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.memorize.MemorizationState.*
 
+typealias MemCardMemorization = MemFactMemorization<MemCard>
+typealias CardItemMemorization = Memorization<Identifiable, CardItem>
+
 class MemorizeCardViewModel(
-    private val getMemorizationUseCase: UseCase<Memorization<Card>, Filter>,
-    private val saveMemorizationUseCase: UseCase<Boolean, Memorization<Card>>,
-    private val mapper: EntityMapper<Card, CardItem>
+    private val getMemorizationUseCase: UseCase<MemCardMemorization, Filter>,
+    private val saveMemorizationUseCase: UseCase<Boolean, MemCardMemorization>,
+    private val mapper: EntityMapper<MemCard, CardItem>
 ) : BaseViewModel() {
 
     private val _state = NonNullMutableLiveData(LOADING)
-    private lateinit var _memorization: CardItemMemorization
+    private lateinit var _memorization: CardItemMemorizationImpl
 
     val state: NonNullLiveData<MemorizationState>
         get() = _state
 
-    val memorization: Memorization<CardItem>
+    val memorization: CardItemMemorization
         get() = if (_state.value >= STARTED) _memorization else EmptyMemorization
 
     init {
@@ -39,27 +41,27 @@ class MemorizeCardViewModel(
         _state.value = LOADING
         getMemorizationUseCase(viewModelScope, Filter.None) {
             it.data?.let { list ->
-                _memorization = CardItemMemorization(list, mapper)
+                _memorization = CardItemMemorizationImpl(list, mapper)
                 _state.value = STARTED
             }
             afterUseCase(it)
         }
     }
 
-    private fun save(params: Memorization<Card>) {
+    private fun save(params: MemCardMemorization) {
         saveMemorizationUseCase(viewModelScope, params) {
             //fixme show errors
         }
     }
 
-    private inner class CardItemMemorization(
-        val base: Memorization<Card>,
-        mapper: EntityMapper<Card, CardItem>
-    ) : Memorization<CardItem> {
+    private inner class CardItemMemorizationImpl(
+        val base: MemCardMemorization,
+        mapper: EntityMapper<MemCard, CardItem>
+    ) : CardItemMemorization {
 
         private val transform = mapper.transform
 
-        private val _currentFact: MappedLiveData<Card, CardItem>
+        private val _currentFact: MappedLiveData<MemCard, CardItem>
                 = MappedLiveData(transform)
 
         init {
@@ -77,6 +79,8 @@ class MemorizeCardViewModel(
 
         override val isDone: NonNullLiveData<Boolean>
             get() = base.isDone
+
+        override val changes: TrackingChangesCollection<Identifiable> = TrackingChangesCollection()
 
         override fun showAnswer(): Boolean = base.showAnswer()
 
@@ -98,7 +102,7 @@ class MemorizeCardViewModel(
             }
     }
 
-    object EmptyMemorization : BaseMemorization<CardItem>(emptyList())
+    object EmptyMemorization : BaseMemorization<Identifiable, CardItem>(emptyList())
 
 }
 

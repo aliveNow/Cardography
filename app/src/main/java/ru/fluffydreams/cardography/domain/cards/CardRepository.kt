@@ -2,6 +2,7 @@ package ru.fluffydreams.cardography.domain.cards
 
 import androidx.lifecycle.LiveData
 import ru.fluffydreams.cardography.core.data.Resource
+import ru.fluffydreams.cardography.domain.cards.model.Card
 
 interface CardRepository {
 

@@ -5,8 +5,9 @@ import androidx.lifecycle.Transformations
 import ru.fluffydreams.cardography.core.data.Resource
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
 import ru.fluffydreams.cardography.data.cards.CardLocalDataSource
-import ru.fluffydreams.cardography.domain.cards.Card
-import ru.fluffydreams.cardography.domain.cards.copyWithId
+import ru.fluffydreams.cardography.datasource.local.cards.model.CardEntity
+import ru.fluffydreams.cardography.domain.cards.model.Card
+import ru.fluffydreams.cardography.domain.cards.model.copyWithId
 
 class CardLocalDataSourceImpl(
     private val cardDao: CardDao,

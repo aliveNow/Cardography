@@ -4,7 +4,7 @@ import java.util.*
 
 data class MemorizeAttempt(
     val id: Long,
-    val cardId: Long,
+    val memId: Long,
     val date: Date,
     val result: MemorizeAttemptResult
 )

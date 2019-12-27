@@ -1,7 +1,5 @@
 package ru.fluffydreams.cardography.core.filter
 
-import java.lang.IllegalArgumentException
-
 interface FieldMapper {
     operator fun invoke(operand: Operand<*>): Operand<*>
 }

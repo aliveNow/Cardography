@@ -11,7 +11,7 @@ class LocalAttemptMapper : EntityMapper<MemorizeAttempt, AttemptEntity>(
 )
 
 fun MemorizeAttempt.mapToLocal(): AttemptEntity =
-    AttemptEntity(id, cardId, date, result.id)
+    AttemptEntity(if (id != 0L) id else date.time, memId, date, result.id)
 
 fun AttemptEntity.mapToDomain(): MemorizeAttempt =
-    MemorizeAttempt(id, cardId, date, MemorizeAttemptResult.getById(resultId))
+    MemorizeAttempt(id, memId, date, MemorizeAttemptResult.getById(resultId))

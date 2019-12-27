@@ -5,23 +5,18 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "attempts",
+@Entity(tableName = "mem_facts",
     foreignKeys = [
-        ForeignKey(
-            entity = MemFactEntity::class,
-            parentColumns = ["memId"],
-            childColumns = ["memId"],
-            onDelete = ForeignKey.CASCADE
-        ),
         ForeignKey(
             entity = AttemptResultEntity::class,
             parentColumns = ["id"],
-            childColumns = ["resultId"]
+            childColumns = ["lastResultId"]
         )])
-data class AttemptEntity(
+data class MemFactEntity(
     @PrimaryKey
-    val id: Long,
     val memId: Long,
-    val date: Date,
-    val resultId: Long
+    val factId: Long,
+    val dateFirst: Date?,
+    val dateLast: Date?,
+    val lastResultId: Long?
 )

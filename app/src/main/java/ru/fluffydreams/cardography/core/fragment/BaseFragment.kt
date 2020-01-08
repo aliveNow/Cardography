@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +15,9 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.fluffydreams.cardography.R
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment(
+    private val useDataBinding: Boolean = false
+) : Fragment() {
 
     abstract val layoutId: Int
 
@@ -25,7 +29,18 @@ abstract class BaseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         setHasOptionsMenu(true)
-        return inflater.inflate(layoutId, container, false)
+        return if (useDataBinding) {
+            DataBindingUtil.inflate<ViewDataBinding>(inflater, layoutId, container, false)
+                .apply {
+                    lifecycleOwner = this@BaseFragment
+                    prepareDataBinding(this)
+                }.root
+        }else {
+            inflater.inflate(layoutId, container, false)
+        }
+    }
+
+    protected open fun prepareDataBinding(binding : ViewDataBinding) {
     }
 
     protected fun showSnackBar(success: String? = null,

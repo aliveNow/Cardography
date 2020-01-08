@@ -6,6 +6,8 @@
 
     <string name="hint_front_title">Front title</string>
     <string name="hint_back_title">Back title</string>
+    
+    <string name="error_field_cannot_be_empty">Field cannot be empty</string>
 
     <string name="button_save">Save</string>
     <string name="button_show_answer">Show Answer</string>

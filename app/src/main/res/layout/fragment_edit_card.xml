@@ -1,45 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootLayout"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout=".ui.cards.edit.EditCardFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:hint="@string/hint_front_title"
+    <data>
+        <variable name="viewmodel"
+            type="ru.fluffydreams.cardography.ui.cards.edit.EditCardViewModel"/>
+    </data>
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rootLayout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        tools:layout=".ui.cards.edit.EditCardFragment">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/cardFrontTitle"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cardFrontTitleLayout"
+            android:hint="@string/hint_front_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:errorEnabled="true">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cardFrontTitle"
+                android:text="@={viewmodel.cardFrontTitle}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:hint="@string/hint_back_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/cardBackTitle"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cardBackTitleLayout"
+            android:hint="@string/hint_back_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:errorEnabled="true">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cardBackTitle"
+                android:text="@={viewmodel.cardBackTitle}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
-        android:id="@+id/buttonSave"
-        style="@style/CircularProgressButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginRight="@dimen/button_side_margin"
-        android:layout_marginLeft="@dimen/button_side_margin"
-        android:layout_marginBottom="@dimen/button_bottom_margin"
-        android:text="@string/button_save"
-         />
+        </com.google.android.material.textfield.TextInputLayout>
 
-</LinearLayout>
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/buttonSave"
+            style="@style/CircularProgressButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginRight="@dimen/button_side_margin"
+            android:layout_marginLeft="@dimen/button_side_margin"
+            android:layout_marginBottom="@dimen/button_bottom_margin"
+            android:text="@string/button_save"
+            android:onClick="@{() -> viewmodel.save()}"
+            />
+
+    </LinearLayout>
+</layout>

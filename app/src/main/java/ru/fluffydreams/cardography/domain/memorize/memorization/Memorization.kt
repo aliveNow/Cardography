@@ -13,9 +13,9 @@ interface Memorization<C : Identifiable, F : C> {
     val isDone: NonNullLiveData<Boolean>
     val changes: TrackingChangesCollection<C>
 
-    fun showAnswer(): Boolean
-    fun next(): F?
-    fun setAside(): Boolean
-    fun done(): Boolean
+    fun showAnswer()
+    fun next(): F
+    fun setAside(): F
+    fun done()
 
 }

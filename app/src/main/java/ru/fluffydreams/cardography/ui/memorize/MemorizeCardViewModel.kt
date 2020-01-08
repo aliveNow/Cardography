@@ -33,10 +33,10 @@ class MemorizeCardViewModel(
         get() = if (_state.value >= STARTED) _memorization else EmptyMemorization
 
     init {
-        get()
+        loadData()
     }
 
-    private fun get() {
+    private fun loadData() {
         beforeUseCase()
         _state.value = LOADING
         getMemorizationUseCase(viewModelScope, Filter.None) {
@@ -82,24 +82,24 @@ class MemorizeCardViewModel(
 
         override val changes: TrackingChangesCollection<Identifiable> = TrackingChangesCollection()
 
-        override fun showAnswer(): Boolean = base.showAnswer()
+        override fun showAnswer() = base.showAnswer()
 
-        override fun next(): CardItem? =
-            base.next()?.let {
-                save(base)
-                transform(it)
-            }
+        override fun next(): CardItem = saveAndTransform(base.next())
 
-        override fun setAside(): Boolean = base.setAside()
+        override fun setAside(): CardItem = saveAndTransform(base.setAside())
 
-        override fun done(): Boolean =
-            if (base.done()) {
-                save(base)
-                _state.value = DONE
-                true
-            } else {
-                false
-            }
+        override fun done() {
+            base.done()
+            save()
+            _state.value = DONE
+        }
+
+        private fun saveAndTransform(memCard: MemCard): CardItem {
+            save()
+            return transform(memCard)
+        }
+
+        private fun save() = save(base)
     }
 
     object EmptyMemorization : BaseMemorization<Identifiable, CardItem>(emptyList())

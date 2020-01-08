@@ -31,49 +31,38 @@ open class BaseMemorization<C : Identifiable, F : C>(
     override val isDone: NonNullLiveData<Boolean>
         get() = _isDone
 
-    override fun showAnswer(): Boolean {
+    override fun showAnswer() {
         _isAnswerVisible.value = true
-        return isAnswerVisible.value
     }
 
-    override fun next(): F? {
-        checkIfDone()
-        check(hasNext) { EXCEPTION_FACTS_LIST_IS_EMPTY }
-        processedFacts.add(facts.first)
-        removeFirstFact()
-        return currentFact.value
-    }
+    override fun next(): F =
+        moveToNextFact { processedFacts.add(facts.first) }
 
-    override fun setAside(): Boolean {
-        checkIfDone()
-        return if (facts.size > 1) {
-            facts.addLast(facts.first)
-            removeFirstFact()
-            true
-        } else {
-            false
-        }
-    }
+    override fun setAside(): F =
+        moveToNextFact { facts.addLast(facts.first) }
 
-    override fun done(): Boolean {
+
+    override fun done() {
         if (facts.size <= 1) {
             _isDone.value = true
         }
-        return isDone.value
+    }
+
+    private inline fun moveToNextFact(beforeNext: () -> Unit): F {
+        checkIfDone()
+        beforeNext()
+        hideAnswer()
+        facts.removeFirst()
+        _currentFact.value = facts.peekFirst()
+        return currentFact.value!!
     }
 
     private fun checkIfDone() = check(!isDone.value) { EXCEPTION_MEMORIZATION_IS_DONE }
 
-    private fun removeFirstFact(): F? =
-        if (facts.isNotEmpty()) {
-            val removed = facts.removeFirst()
-            _currentFact.value = facts.peekFirst()
-            removed
-        } else {
-            null
-        }
+    private fun hideAnswer() {
+        _isAnswerVisible.value = false
+    }
 
 }
 
 private const val EXCEPTION_MEMORIZATION_IS_DONE = "Memorization is done"
-private const val EXCEPTION_FACTS_LIST_IS_EMPTY = "Facts list is empty"

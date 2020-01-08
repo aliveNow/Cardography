@@ -3,39 +3,47 @@ package ru.fluffydreams.cardography.domain.memorize.memorization
 import ru.fluffydreams.cardography.domain.memorize.model.MemFact
 import ru.fluffydreams.cardography.domain.memorize.model.MemorizeAttempt
 import ru.fluffydreams.cardography.domain.memorize.model.MemorizeAttemptResult
+import ru.fluffydreams.cardography.domain.memorize.model.MemorizeAttemptResult.*
 import java.util.*
 
 class MemFactMemorization<F : MemFact>(list: List<F>) : BaseMemorization<MemFact, F>(list) {
 
-    override fun next(): F? {
-        val fact = currentFact.value
-        val isAnswerShown = isAnswerVisible.value
-        val result = super.next()
-        if (fact != null) {
-            val date = Date()
-            val attemptResult = if (isAnswerShown) {
-                MemorizeAttemptResult.RECALLED_WELL
-            } else {
-                MemorizeAttemptResult.RECALLED_FABULOUS
+    override fun next(): F {
+        saveCurrentAttempt(if (isAnswerVisible.value) RECALLED_WELL else RECALLED_FABULOUS)
+        return super.next()
+    }
+
+    override fun setAside(): F {
+        saveCurrentAttempt(if (isAnswerVisible.value) FORGOTTEN else RECALLED_BADLY)
+        return super.setAside()
+    }
+
+    override fun done() {
+        saveCurrentAttempt(if (isAnswerVisible.value) RECALLED_WELL else RECALLED_FABULOUS)
+        super.done()
+    }
+
+    private fun saveCurrentAttempt(attemptResult: MemorizeAttemptResult) =
+        currentFact.value?.let { saveAttempt(it, attemptResult) }
+
+    private fun saveAttempt(fact: F, attemptResult: MemorizeAttemptResult) {
+        val date = Date()
+        val changedFact = (changes.changed(fact.uniqueId) ?: fact).mutableCopy().apply {
+            if (memId == 0L) {
+                memId = date.time
+                dateFirst = date
             }
-            val changedFact = (changes.changed(fact.uniqueId) ?: fact).mutableCopy().apply {
-                if (memId == 0L) {
-                    memId = date.time
-                    dateFirst = date
-                }
-                dateLast = date
-                lastResult = attemptResult
-                val attempt = MemorizeAttempt(
-                    date.time,
-                    memId,
-                    date,
-                    attemptResult
-                )
-                attempts.add(attempt)
-            }
-            changes.add(fact, changedFact)
+            dateLast = date
+            lastResult = attemptResult
+            val attempt = MemorizeAttempt(
+                id = date.time,
+                memId = memId,
+                date = date,
+                result = attemptResult
+            )
+            attempts.add(attempt)
         }
-        return result
+        changes.add(fact, changedFact)
     }
 
 }

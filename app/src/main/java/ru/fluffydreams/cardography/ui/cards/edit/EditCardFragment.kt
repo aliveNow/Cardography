@@ -49,6 +49,7 @@ class EditCardFragment : BaseFragment(useDataBinding = true) {
 
     private fun updateFieldError(til: TextInputLayout, visible: Boolean) {
         til.error = if (visible) getString(R.string.error_field_cannot_be_empty) else null
+        til.isErrorEnabled = visible
     }
 
 }

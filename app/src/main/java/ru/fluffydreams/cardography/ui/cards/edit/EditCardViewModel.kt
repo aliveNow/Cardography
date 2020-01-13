@@ -57,8 +57,8 @@ class EditCardViewModel(
         field: LiveData<String>,
         errorIsVisible: NonNullMutableLiveData<Boolean>
     ): Boolean =
-        field.value.isNullOrBlank().also {
-            errorIsVisible.value = it
+        (!field.value.isNullOrEmpty()).also {
+            errorIsVisible.value = !it
         }
 
     private fun prepareCardForSave(): Card {

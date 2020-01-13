@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.fluffydreams.cardography.R
+import ru.fluffydreams.cardography.core.ui.hideKeyboard
 
 abstract class BaseFragment(
     private val useDataBinding: Boolean = false
@@ -68,6 +69,7 @@ abstract class BaseFragment(
     }
 
     protected fun finish() {
+        hideKeyboard()
         findNavController().popBackStack()
     }
 

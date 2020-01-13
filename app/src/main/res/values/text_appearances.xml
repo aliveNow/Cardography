@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Text.ListItemTitle" parent="TextAppearance.AppCompat.Large"/>
-    <style name="Text.ListItemContent" parent="TextAppearance.AppCompat.Medium"/>
+    <style name="Text.ListItemTitle" parent="TextAppearance.MaterialComponents.Headline5"/>
+    <style name="Text.ListItemContent" parent="TextAppearance.MaterialComponents.Body2"/>
+
+    <style name="Text.MemCardTitle" parent="TextAppearance.MaterialComponents.Headline6"/>
 
 </resources>

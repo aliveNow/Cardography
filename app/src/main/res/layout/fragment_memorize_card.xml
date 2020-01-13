@@ -4,42 +4,48 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/default_padding"
+    android:gravity="center_horizontal"
     tools:layout=".ui.memorize.MemorizeCardFragment">
 
     <TextView
         android:id="@+id/cardFrontTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:textAppearance="@style/Text.MemCardTitle"
         tools:text="Title 1"/>
 
     <TextView
         android:id="@+id/cardBackTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:textAppearance="@style/Text.MemCardTitle"
         tools:text="Title 2"/>
 
-    <Button
-        android:id="@+id/buttonNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_next"/>
-
-    <Button
-        android:id="@+id/buttonDone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_done"/>
-
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonShowAnswer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_show_answer"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_next"/>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSetAside"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_set_aside"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_done"/>
 
 </LinearLayout>

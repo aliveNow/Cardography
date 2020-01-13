@@ -12,10 +12,15 @@
         tools:layout="@layout/fragment_cards">
         <action
             android:id="@+id/action_from_cards_to_edit_card"
-            app:destination="@id/editCardFragment" />
+            app:destination="@id/editCardFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_from_cards_to_memorize"
-            app:destination="@id/memorizeCardFragment" />
+            app:destination="@id/memorizeCardFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/editCardFragment"

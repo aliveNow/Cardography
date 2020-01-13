@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable name="viewmodel"
@@ -13,14 +12,14 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="@dimen/default_padding"
         tools:layout=".ui.cards.edit.EditCardFragment">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/cardFrontTitleLayout"
             android:hint="@string/hint_front_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:errorEnabled="true">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cardFrontTitle"
@@ -35,7 +34,7 @@
             android:hint="@string/hint_back_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true">
+            android:layout_marginTop="@dimen/default_margin">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cardBackTitle"
@@ -49,10 +48,9 @@
             android:id="@+id/buttonSave"
             style="@style/CircularProgressButton"
             android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/default_margin"
             android:layout_height="@dimen/button_height"
-            android:layout_marginRight="@dimen/button_side_margin"
-            android:layout_marginLeft="@dimen/button_side_margin"
-            android:layout_marginBottom="@dimen/button_bottom_margin"
+            android:layout_gravity="center"
             android:text="@string/button_save"
             android:onClick="@{() -> viewmodel.save()}"
             />

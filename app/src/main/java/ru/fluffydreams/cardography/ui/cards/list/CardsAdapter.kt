@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_list_card.view.*
 import ru.fluffydreams.cardography.R
 import ru.fluffydreams.cardography.core.ui.inflate
+import ru.fluffydreams.cardography.core.ui.setTextOrHide
 import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.cards.CardSideItem
 
@@ -25,8 +26,8 @@ class CardsAdapter : ListAdapter<CardItem, CardsAdapter.ViewHolder>(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(cardSide: CardSideItem) =
             with(cardSide) {
-                itemView.cardTitle.text = title
-                itemView.cardContent.text = content
+                itemView.cardTitle.setTextOrHide(title)
+                itemView.cardContent.setTextOrHide(content)
             }
     }
 }

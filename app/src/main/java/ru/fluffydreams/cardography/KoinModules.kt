@@ -29,6 +29,7 @@ import ru.fluffydreams.cardography.datasource.local.memorize.mapper.LocalAttempt
 import ru.fluffydreams.cardography.datasource.local.memorize.mapper.LocalAttemptResultMapper
 import ru.fluffydreams.cardography.datasource.local.memorize.mapper.LocalMemFactMapper
 import ru.fluffydreams.cardography.domain.cards.CardRepository
+import ru.fluffydreams.cardography.domain.cards.interactor.DeleteCardUseCase
 import ru.fluffydreams.cardography.domain.cards.interactor.EditCardUseCase
 import ru.fluffydreams.cardography.domain.cards.interactor.GetCardsUseCase
 import ru.fluffydreams.cardography.domain.memcard.model.MemCard
@@ -46,6 +47,7 @@ import ru.fluffydreams.cardography.ui.memorize.UIMemCardMapper
 val viewModelModule: Module = module {
     viewModel { CardsViewModel(
         getCardsUseCase = get(named(GET_CARDS_USE_CASE)),
+        deleteCardUseCase = get(named(DELETE_CARD_USE_CASE)),
         mapper = get(named(UI_CARD_MAPPER))
     ) }
     viewModel { EditCardViewModel(
@@ -66,6 +68,7 @@ val uiMapperModule: Module = module {
 
 val useCaseModule: Module = module {
     factory(named(GET_CARDS_USE_CASE)) { GetCardsUseCase(cardRepository = get()) }
+    factory(named(DELETE_CARD_USE_CASE)) { DeleteCardUseCase(cardRepository = get()) }
     factory(named(EDIT_CARD_USE_CASE)) { EditCardUseCase(cardRepository = get()) }
     factory(named(GET_CARDS_MEMORIZATION_USE_CASE)) {
         GetMemorizationUseCase<MemFact>(memorizeRepository = get())
@@ -150,6 +153,7 @@ val sqlFilterInterpreter =
     }.getInterpreter()
 
 private const val EDIT_CARD_USE_CASE = "EDIT_CARD_USE_CASE"
+private const val DELETE_CARD_USE_CASE = "DELETE_CARD_USE_CASE"
 private const val GET_CARDS_USE_CASE = "GET_CARDS_USE_CASE"
 private const val GET_CARDS_MEMORIZATION_USE_CASE = "GET_CARDS_MEMORIZATION_USE_CASE"
 private const val SAVE_MEMORIZATION_RESULT_USE_CASE = "SAVE_MEMORIZATION_RESULT_USE_CASE"

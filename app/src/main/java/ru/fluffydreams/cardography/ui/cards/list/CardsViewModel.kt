@@ -12,7 +12,8 @@ import ru.fluffydreams.cardography.ui.cards.CardItem
 
 class CardsViewModel(
     private val getCardsUseCase: UseCase<LiveData<List<Card>>, None>,
-    mapper: EntityMapper<Card, CardItem>
+    private val deleteCardUseCase: UseCase<Card, Card>,
+    private val mapper: EntityMapper<Card, CardItem>
 ) : BaseViewModel() {
 
     private val _cards = MappedListLiveData(mapper)
@@ -21,14 +22,20 @@ class CardsViewModel(
         get() = _cards
 
     init {
-        get() //fixme
+        load()
     }
 
-    fun get() {
+    fun load() {
         beforeUseCase()
         getCardsUseCase(viewModelScope, None) {
             _cards.source = it.data
             afterUseCase(it)
+        }
+    }
+
+    fun delete(cardItem: CardItem) {
+        deleteCardUseCase(viewModelScope, mapper.mapReverse(cardItem)) {
+            // FIXME: показать, что удалено успешно
         }
     }
 

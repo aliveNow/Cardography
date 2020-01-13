@@ -14,14 +14,20 @@ import ru.fluffydreams.cardography.ui.cards.CardSideItem
 
 class CardsAdapter : ListAdapter<CardItem, CardsAdapter.ViewHolder>(
     CardDiffCallback()
-){
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_list_card))
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(getItem(position).frontSide)
+
+    fun removeItemAt(position: Int): CardItem =
+        with(currentList.toMutableList()) {
+            val removedItem = removeAt(position)
+            submitList(this)
+            removedItem
+        }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(cardSide: CardSideItem) =
@@ -33,6 +39,7 @@ class CardsAdapter : ListAdapter<CardItem, CardsAdapter.ViewHolder>(
 }
 
 private class CardDiffCallback : DiffUtil.ItemCallback<CardItem>() {
+
     override fun areItemsTheSame(oldItem: CardItem, newItem: CardItem): Boolean =
         oldItem.id == newItem.id
 

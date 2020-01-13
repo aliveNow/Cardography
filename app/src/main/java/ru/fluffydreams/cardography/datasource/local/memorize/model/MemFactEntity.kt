@@ -7,6 +7,9 @@ import java.util.*
 
 @Entity(tableName = "mem_facts",
     foreignKeys = [
+        /* memorize задумывался как независимый от card модуль, поэтому здесь нет внешнего ключа
+        к CardEntity. При удалении карточки MemFactEntity остаётся для будущей статистики.
+         */
         ForeignKey(
             entity = AttemptResultEntity::class,
             parentColumns = ["id"],

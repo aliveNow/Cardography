@@ -17,6 +17,8 @@ import ru.fluffydreams.cardography.core.fragment.OperationState
 import ru.fluffydreams.cardography.core.ui.startRefreshing
 import ru.fluffydreams.cardography.core.ui.stopRefreshing
 import ru.fluffydreams.cardography.ui.cards.CardItem
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 
 class CardsFragment : BaseFragment() {
 
@@ -36,16 +38,17 @@ class CardsFragment : BaseFragment() {
         cardsList.layoutManager = LinearLayoutManager(context)
         cardsList.adapter = adapter
         swipeRefreshLayout.setOnRefreshListener { refresh() }
+        // ItemTouchHelper отслеживает событие "swipe to dismiss" в recyclerView
+        val touchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback(::removeItemAt))
+        touchHelper.attachToRecyclerView(cardsList)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_cards, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return item.onNavDestinationSelected(findNavController())
-                || super.onOptionsItemSelected(item)
-    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        item.onNavDestinationSelected(findNavController()) || super.onOptionsItemSelected(item)
 
     private fun updateCards(list: List<CardItem>?) {
         adapter.submitList(list)
@@ -72,6 +75,45 @@ class CardsFragment : BaseFragment() {
         }
     }
 
-    private fun refresh() = viewModel.get()
+    private fun refresh() {
+        viewModel.load()
+    }
+
+    private fun removeItemAt(position: Int) {
+        viewModel.delete(adapter.removeItemAt(position))
+    }
 
 }
+
+//region ItemTouchHelper for swipe-to-dismiss
+//==============================================================================================
+private class SimpleItemTouchHelperCallback(
+    private val onItemDismissAction: (Int) -> Unit
+) : ItemTouchHelper.Callback() {
+
+    override fun isLongPressDragEnabled(): Boolean = false
+
+    override fun isItemViewSwipeEnabled(): Boolean = true
+
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
+        val dragFlags = 0
+        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+        return makeMovementFlags(dragFlags, swipeFlags)
+    }
+
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean = false
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        onItemDismissAction(viewHolder.adapterPosition)
+    }
+
+}
+//==============================================================================================
+//endregion

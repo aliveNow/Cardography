@@ -14,13 +14,17 @@ class CardLocalDataSourceImpl(
     private val mapper: EntityMapper<Card, CardEntity>
 ) : CardLocalDataSource {
 
-    // FIXME: what if it's empty?....
     override fun get(): Resource<LiveData<List<Card>>> =
         Resource.Success(Transformations.map(cardDao.getAll(), mapper::mapReverse))
 
     override fun add(card: Card): Resource<Card> {
         val cardId = cardDao.insert(mapper.map(card))
         return Resource.Success(card.copyWithId(cardId))
+    }
+
+    override fun delete(card: Card): Resource<Card> {
+        cardDao.delete(mapper.map(card))
+        return Resource.Success(card)
     }
 }
 

@@ -13,4 +13,6 @@ class CardRepositoryImpl (
 
     override fun add(card: Card): Resource<Card> = localDataSource.add(card)
 
+    override fun delete(card: Card): Resource<Card> = localDataSource.delete(card)
+
 }

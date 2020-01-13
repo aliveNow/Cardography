@@ -10,4 +10,6 @@ interface CardRepository {
 
     fun add(card: Card): Resource<Card>
 
+    fun delete(card: Card): Resource<Card>
+
 }

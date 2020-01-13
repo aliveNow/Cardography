@@ -18,8 +18,8 @@ typealias MemCardMemorization = MemFactMemorization<MemCard>
 typealias CardItemMemorization = Memorization<Identifiable, CardItem>
 
 class MemorizeCardViewModel(
-    private val getMemorizationUseCase: UseCase<MemCardMemorization, Filter>,
-    private val saveMemorizationUseCase: UseCase<Boolean, MemCardMemorization>,
+    private val getMemorizationUseCase: UseCase<Filter, MemCardMemorization>,
+    private val saveMemorizationUseCase: UseCase<MemCardMemorization, Boolean>,
     private val mapper: EntityMapper<MemCard, CardItem>
 ) : BaseViewModel() {
 

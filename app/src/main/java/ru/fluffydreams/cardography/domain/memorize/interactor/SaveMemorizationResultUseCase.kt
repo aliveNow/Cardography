@@ -11,7 +11,7 @@ import java.util.*
 
 class SaveMemorizationResultUseCase<F : MemFact> (
     private val memorizeRepository: MemorizeRepository<F>
-): UseCase<Boolean, MemFactMemorization<F>>() {
+): UseCase<MemFactMemorization<F>, Boolean>() {
 
     private val queriesQueue: Queue<List<MemFact>> = LinkedList()
 

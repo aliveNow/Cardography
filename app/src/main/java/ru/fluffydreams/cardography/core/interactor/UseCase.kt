@@ -29,7 +29,7 @@ import ru.fluffydreams.cardography.core.data.Resource
  * By convention each [UseCase] implementation will execute its job in a background thread
  * (kotlin coroutine) and will post the result in the UI thread.
  */
-abstract class UseCase<out Type, in Params> where Type : Any {
+abstract class UseCase<in Params, out Type> where Type : Any {
 
     open fun beforePerform(params: Params) { }
 

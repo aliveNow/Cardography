@@ -11,7 +11,7 @@ import ru.fluffydreams.cardography.domain.cards.model.Card
 import ru.fluffydreams.cardography.ui.cards.CardItem
 
 class CardsViewModel(
-    private val getCardsUseCase: UseCase<LiveData<List<Card>>, None>,
+    private val getCardsUseCase: UseCase<None, LiveData<List<Card>>>,
     private val deleteCardUseCase: UseCase<Card, Card>,
     private val mapper: EntityMapper<Card, CardItem>
 ) : BaseViewModel() {

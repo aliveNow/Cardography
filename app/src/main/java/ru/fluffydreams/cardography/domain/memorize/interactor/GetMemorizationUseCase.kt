@@ -11,7 +11,7 @@ import ru.fluffydreams.cardography.domain.memorize.memorization.MemFactMemorizat
 
 class GetMemorizationUseCase<F : MemFact> (
     private val memorizeRepository: MemorizeRepository<F>
-): UseCase<FactMemorization<F>, Filter>() {
+): UseCase<Filter, FactMemorization<F>>() {
 
     override suspend fun perform(params: Filter): Resource<FactMemorization<F>> =
         memorizeRepository.get(params).map {

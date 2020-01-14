@@ -23,7 +23,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cardFrontTitle"
-                android:text="@={viewmodel.cardFrontTitle}"
+                android:text="@={viewmodel.cardFrontTitle.field}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -38,7 +38,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cardBackTitle"
-                android:text="@={viewmodel.cardBackTitle}"
+                android:text="@={viewmodel.cardBackTitle.field}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

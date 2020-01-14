@@ -1,12 +1,10 @@
 package ru.fluffydreams.cardography.ui.cards.edit
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
-import ru.fluffydreams.cardography.core.data.NonNullLiveData
-import ru.fluffydreams.cardography.core.data.NonNullMutableLiveData
+import ru.fluffydreams.cardography.R
 import ru.fluffydreams.cardography.core.fragment.BaseViewModel
+import ru.fluffydreams.cardography.core.data.ValidatedField
+import ru.fluffydreams.cardography.core.data.ValidationResult
 import ru.fluffydreams.cardography.core.interactor.UseCase
 import ru.fluffydreams.cardography.core.mapper.EntityMapper
 import ru.fluffydreams.cardography.domain.cards.model.Card
@@ -19,13 +17,6 @@ class EditCardViewModel(
     private val mapper: EntityMapper<Card, CardItem>
 ) : BaseViewModel() {
 
-    /* FIXME Можно создать наследника TextInputLayout, который будет сам валидировать своё
-    содержимое. Передавать ему условия валидации и текст. Сразу куча кода уйдёт
-    */
-    private val _errorOnFrontTitleIsVisible = NonNullMutableLiveData(false)
-    private val _errorOnBackTitleIsVisible = NonNullMutableLiveData(false)
-    private val cardTitleObserver = Observer<String>{ validate() }
-
     var cardItem: CardItem? = null
         set(value) {
             if (field == null) value?.let {
@@ -35,19 +26,8 @@ class EditCardViewModel(
             }
         }
 
-    val cardFrontTitle = MutableLiveData<String>()
-    val cardBackTitle = MutableLiveData<String>()
-
-    val errorOnFrontTitleIsVisible: NonNullLiveData<Boolean>
-        get() = _errorOnFrontTitleIsVisible
-
-    val errorOnBackTitleIsVisible: NonNullLiveData<Boolean>
-        get() = _errorOnBackTitleIsVisible
-
-    init {
-        cardFrontTitle.observeForever(cardTitleObserver)
-        cardBackTitle.observeForever(cardTitleObserver)
-    }
+    val cardFrontTitle = ValidatedField(::validate)
+    val cardBackTitle = ValidatedField(::validate)
 
     fun save() {
         if (validate()) {
@@ -60,15 +40,16 @@ class EditCardViewModel(
     }
 
     private fun validate(): Boolean =
-        validate(cardFrontTitle, _errorOnFrontTitleIsVisible) and
-                validate(cardBackTitle, _errorOnBackTitleIsVisible)
+        cardFrontTitle.validate().success and cardBackTitle.validate().success
 
-    private fun validate(
-        field: LiveData<String>,
-        errorIsVisible: NonNullMutableLiveData<Boolean>
-    ): Boolean =
-        (!field.value.isNullOrEmpty()).also {
-            errorIsVisible.value = !it
+    private fun validate(value: String?): ValidationResult =
+        if (value.isNullOrEmpty()) {
+            ValidationResult(
+                false,
+                R.string.error_field_cannot_be_empty
+            )
+        }else {
+            ValidationResult()
         }
 
     private fun prepareCardForSave(): Card {
@@ -80,9 +61,10 @@ class EditCardViewModel(
     }
 
     override fun onCleared() {
-        cardFrontTitle.removeObserver(cardTitleObserver)
-        cardBackTitle.removeObserver(cardTitleObserver)
+        cardFrontTitle.clear()
+        cardBackTitle.clear()
         super.onCleared()
     }
 
 }
+

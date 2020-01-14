@@ -8,6 +8,7 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_edit_card.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.fluffydreams.cardography.R
+import ru.fluffydreams.cardography.core.data.ValidationResult
 import ru.fluffydreams.cardography.core.fragment.BaseFragment
 import ru.fluffydreams.cardography.core.fragment.OperationState
 import ru.fluffydreams.cardography.core.ui.morphDone
@@ -30,9 +31,9 @@ class EditCardFragment : BaseFragment(useDataBinding = true) {
         super.onActivityCreated(savedInstanceState)
         viewModel.cardItem = args.cardItem
         viewModel.operationState.observe(viewLifecycleOwner, Observer(::updateOperationState))
-        viewModel.errorOnFrontTitleIsVisible.observe(viewLifecycleOwner,
+        viewModel.cardFrontTitle.validationResult.observe(viewLifecycleOwner,
             Observer{ updateFieldError(cardFrontTitleLayout, it) })
-        viewModel.errorOnBackTitleIsVisible.observe(viewLifecycleOwner,
+        viewModel.cardBackTitle.validationResult.observe(viewLifecycleOwner,
             Observer{ updateFieldError(cardBackTitleLayout, it) })
     }
 
@@ -50,9 +51,11 @@ class EditCardFragment : BaseFragment(useDataBinding = true) {
         }
     }
 
-    private fun updateFieldError(til: TextInputLayout, visible: Boolean) {
-        til.error = if (visible) getString(R.string.error_field_cannot_be_empty) else null
-        til.isErrorEnabled = visible
+    private fun updateFieldError(til: TextInputLayout, validationResult: ValidationResult) {
+        with(validationResult) {
+            til.error = messageRes?.let { getString(messageRes) } ?: message
+            til.isErrorEnabled = !success
+        }
     }
 
 }

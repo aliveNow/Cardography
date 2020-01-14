@@ -5,11 +5,11 @@ import ru.fluffydreams.cardography.core.interactor.UseCase
 import ru.fluffydreams.cardography.domain.cards.CardRepository
 import ru.fluffydreams.cardography.domain.cards.model.Card
 
-class EditCardUseCase (
+class SaveCardUseCase (
     private val cardRepository: CardRepository
 ): UseCase<Card, Card>() {
 
     override suspend fun perform(params: Card): Resource<Card> =
-        cardRepository.add(params)
+        cardRepository.save(params)
 
 }

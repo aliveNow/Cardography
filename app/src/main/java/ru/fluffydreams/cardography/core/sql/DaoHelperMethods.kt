@@ -3,11 +3,10 @@ package ru.fluffydreams.cardography.core.sql
 inline fun <O> insertOrUpdateObject(obj: O,
                                     insertAction: (O) -> Long,
                                     updateAction: (O) -> Unit
-) {
-    if (insertAction(obj) == FAILED_INSERT_ID) {
-        updateAction(obj)
-    }
+): Long = insertAction(obj).also {
+    if (it == FAILED_INSERT_ID) updateAction(obj)
 }
+
 
 inline fun <O> insertOrUpdateList(list: List<O>,
                                   insertAction: (List<O>) -> List<Long>,

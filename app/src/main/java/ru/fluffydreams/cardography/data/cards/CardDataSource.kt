@@ -8,7 +8,7 @@ interface CardLocalDataSource {
 
     fun get(): Resource<LiveData<List<Card>>>
 
-    fun add(card: Card): Resource<Card>
+    fun save(card: Card): Resource<Card>
 
     fun delete(card: Card): Resource<Card>
 

@@ -3,6 +3,7 @@ package ru.fluffydreams.cardography.ui.cards.edit
 import android.os.Bundle
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_edit_card.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -16,6 +17,7 @@ import ru.fluffydreams.cardography.databinding.FragmentEditCardBinding
 class EditCardFragment : BaseFragment(useDataBinding = true) {
 
     private val viewModel: EditCardViewModel by viewModel()
+    private val args: EditCardFragmentArgs by navArgs()
 
     override val layoutId: Int
         get() = R.layout.fragment_edit_card
@@ -26,6 +28,7 @@ class EditCardFragment : BaseFragment(useDataBinding = true) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        viewModel.cardItem = args.cardItem
         viewModel.operationState.observe(viewLifecycleOwner, Observer(::updateOperationState))
         viewModel.errorOnFrontTitleIsVisible.observe(viewLifecycleOwner,
             Observer{ updateFieldError(cardFrontTitleLayout, it) })

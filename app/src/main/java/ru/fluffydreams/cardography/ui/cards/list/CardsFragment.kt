@@ -23,7 +23,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 class CardsFragment : BaseFragment() {
 
     private val viewModel: CardsViewModel by viewModel()
-    private val adapter = CardsAdapter()
+    private val adapter = CardsAdapter(clickListener = {
+        navigateTo(CardsFragmentDirections.actionFromCardsToEditCard(it))
+    })
 
     override val layoutId: Int
         get() = R.layout.fragment_cards

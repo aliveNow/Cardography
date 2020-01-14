@@ -12,15 +12,18 @@ import ru.fluffydreams.cardography.core.ui.setTextOrHide
 import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.cards.CardSideItem
 
-class CardsAdapter : ListAdapter<CardItem, CardsAdapter.ViewHolder>(
-    CardDiffCallback()
-) {
+class CardsAdapter(
+    val clickListener: (CardItem) -> Unit
+) : ListAdapter<CardItem, CardsAdapter.ViewHolder>(CardDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_list_card))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(getItem(position).frontSide)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val card = getItem(position)
+        holder.bind(card.frontSide)
+        holder.itemView.setOnClickListener { clickListener(card) }
+    }
 
     fun removeItemAt(position: Int): CardItem =
         with(currentList.toMutableList()) {

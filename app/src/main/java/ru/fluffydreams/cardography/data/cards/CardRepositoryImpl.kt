@@ -11,7 +11,7 @@ class CardRepositoryImpl (
 
     override fun get(): Resource<LiveData<List<Card>>> = localDataSource.get()
 
-    override fun add(card: Card): Resource<Card> = localDataSource.add(card)
+    override fun save(card: Card): Resource<Card> = localDataSource.save(card)
 
     override fun delete(card: Card): Resource<Card> = localDataSource.delete(card)
 

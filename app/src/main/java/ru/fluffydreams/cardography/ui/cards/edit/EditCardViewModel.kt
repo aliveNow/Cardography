@@ -12,9 +12,10 @@ import ru.fluffydreams.cardography.core.mapper.EntityMapper
 import ru.fluffydreams.cardography.domain.cards.model.Card
 import ru.fluffydreams.cardography.ui.cards.CardItem
 import ru.fluffydreams.cardography.ui.cards.CardSideItem
+import ru.fluffydreams.cardography.ui.cards.NEW_CARD_ID
 
 class EditCardViewModel(
-    private val editCardUseCase: UseCase<Card, Card>,
+    private val saveCardUseCase: UseCase<Card, Card>,
     private val mapper: EntityMapper<Card, CardItem>
 ) : BaseViewModel() {
 
@@ -24,6 +25,15 @@ class EditCardViewModel(
     private val _errorOnFrontTitleIsVisible = NonNullMutableLiveData(false)
     private val _errorOnBackTitleIsVisible = NonNullMutableLiveData(false)
     private val cardTitleObserver = Observer<String>{ validate() }
+
+    var cardItem: CardItem? = null
+        set(value) {
+            if (field == null) value?.let {
+                field = it
+                cardFrontTitle.value = it.frontSide.title
+                cardBackTitle.value = it.backSide.title
+            }
+        }
 
     val cardFrontTitle = MutableLiveData<String>()
     val cardBackTitle = MutableLiveData<String>()
@@ -43,7 +53,7 @@ class EditCardViewModel(
         if (validate()) {
             val card = prepareCardForSave()
             beforeUseCase()
-            editCardUseCase(viewModelScope, card) {
+            saveCardUseCase(viewModelScope, card) {
                 afterUseCase(it)
             }
         }
@@ -62,9 +72,10 @@ class EditCardViewModel(
         }
 
     private fun prepareCardForSave(): Card {
-        val frontSide = CardSideItem(title = cardFrontTitle.value)
-        val backSide = CardSideItem(title = cardBackTitle.value)
-        val card = CardItem(frontSide = frontSide, backSide = backSide)
+        val cardId = cardItem?.id ?: NEW_CARD_ID
+        val frontSide = CardSideItem(cardId = cardId, title = cardFrontTitle.value)
+        val backSide = CardSideItem(cardId = cardId, title = cardBackTitle.value)
+        val card = CardItem(id = cardId, frontSide = frontSide, backSide = backSide)
         return mapper.mapReverse(card)
     }
 
